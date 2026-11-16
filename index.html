@@ -61,7 +61,7 @@
       </button>
     </section>
 
-    <section class="arena" aria-live="polite">
+    <section class="arena" aria-label="Last round">
       <div class="pick">
         <span class="pick-label">Player</span>
         <span class="pick-value" id="playerDisplay">—</span>
@@ -86,6 +86,8 @@
   <footer class="footer">
     <p>Built with HTML, CSS and JavaScript by <a href="https://github.com/codelady-ship">codelady-ship</a> · <a href="https://github.com/codelady-ship/rock-paper-scissors">Source</a></p>
   </footer>
+
+  <p class="visually-hidden" id="announce" role="status" aria-live="polite"></p>
 
   <script src="script.js"></script>
 </body>
