@@ -16,6 +16,7 @@
     playerDisplay: document.getElementById('playerDisplay'),
     computerDisplay: document.getElementById('computerDisplay'),
     result: document.getElementById('resultDisplay'),
+    announce: document.getElementById('announce'),
     historyList: document.getElementById('historyList'),
     historyEmpty: document.getElementById('historyEmpty'),
   };
@@ -25,7 +26,13 @@
   function load() {
     try {
       const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      return s && Array.isArray(s.history) ? s : emptyState();
+      if (!s || typeof s !== 'object' || !Array.isArray(s.history)) return emptyState();
+      const count = (n) => (Number.isInteger(n) && n >= 0 ? n : 0);
+      // Keep only well-formed rounds; anything else in storage is ignored.
+      const history = s.history
+        .filter((h) => h && CHOICES.includes(h.player) && CHOICES.includes(h.computer) && Object.hasOwn(RESULT_TEXT, h.result) && Number.isInteger(h.round))
+        .slice(0, HISTORY_LIMIT);
+      return { player: count(s.player), computer: count(s.computer), ties: count(s.ties), round: count(s.round), history };
     } catch (e) {
       return emptyState();
     }
@@ -65,6 +72,7 @@
     el.playerDisplay.textContent = label(playerChoice);
     el.computerDisplay.textContent = label(computerChoice);
     showResult(result);
+    el.announce.textContent = `Round ${state.round}: you chose ${playerChoice}, computer chose ${computerChoice}. ${RESULT_TEXT[result]}`;
     renderScore();
     renderHistory();
   }
@@ -83,16 +91,22 @@
     el.tieScore.textContent = state.ties;
   }
 
+  function span(className, text) {
+    const s = document.createElement('span');
+    s.className = className;
+    s.textContent = text;
+    return s;
+  }
+
   function renderHistory() {
     el.historyList.innerHTML = '';
     el.historyList.start = state.round;
     state.history.forEach((h) => {
       const li = document.createElement('li');
       li.className = 'history-item is-' + h.result;
-      li.innerHTML = `
-        <span class="h-round">#${h.round}</span>
-        <span class="h-moves">${label(h.player)} <span class="vs">vs</span> ${label(h.computer)}</span>
-        <span class="h-result">${RESULT_TEXT[h.result]}</span>`;
+      const moves = span('h-moves', label(h.player) + ' ');
+      moves.append(span('vs', 'vs'), ' ' + label(h.computer));
+      li.append(span('h-round', '#' + h.round), moves, span('h-result', RESULT_TEXT[h.result]));
       el.historyList.appendChild(li);
     });
     el.historyEmpty.hidden = state.history.length > 0;
@@ -105,6 +119,7 @@
     el.computerDisplay.textContent = '—';
     el.result.textContent = 'Make your move';
     el.result.className = 'result';
+    el.announce.textContent = 'Game reset.';
     renderScore();
     renderHistory();
   }
@@ -117,7 +132,7 @@
   document.getElementById('resetBtn').addEventListener('click', reset);
 
   document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
     const key = e.key.toLowerCase();
     const map = { r: 'rock', p: 'paper', s: 'scissors' };
     if (map[key]) play(map[key]);
