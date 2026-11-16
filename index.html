@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rock Paper Scissors — play against the computer</title>
+  <meta name="description" content="Play Rock Paper Scissors against the computer in your browser. Score board, round history, reset button and keyboard shortcuts. Built with HTML, CSS and JavaScript." />
+  <link rel="canonical" href="https://codelady-ship.github.io/rock-paper-scissors/" />
+  <meta name="theme-color" content="#111827" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Rock Paper Scissors" />
+  <meta property="og:description" content="Play Rock Paper Scissors against the computer, with score and round history." />
+  <meta property="og:url" content="https://codelady-ship.github.io/rock-paper-scissors/" />
+  <meta property="og:image" content="https://codelady-ship.github.io/rock-paper-scissors/docs/screenshot.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Rock Paper Scissors" />
+  <meta name="twitter:description" content="Play Rock Paper Scissors against the computer, with score and round history." />
+  <meta name="twitter:image" content="https://codelady-ship.github.io/rock-paper-scissors/docs/screenshot.png" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="game">
+    <header class="game-header">
+      <h1 class="title">Rock Paper Scissors</h1>
+      <p class="subtitle">Pick your move — the computer picks at random. Use the buttons or press R, P or S.</p>
+    </header>
+
+    <section class="scoreboard" aria-label="Score">
+      <div class="score score-player">
+        <span class="score-label">Player</span>
+        <span class="score-value" id="playerScore">0</span>
+      </div>
+      <div class="score score-ties">
+        <span class="score-label">Ties</span>
+        <span class="score-value" id="tieScore">0</span>
+      </div>
+      <div class="score score-computer">
+        <span class="score-label">Computer</span>
+        <span class="score-value" id="computerScore">0</span>
+      </div>
+    </section>
+
+    <section class="choices" id="choices" aria-label="Your move">
+      <button class="choice" type="button" data-choice="rock" aria-keyshortcuts="R">
+        <span class="choice-emoji" aria-hidden="true">✊</span>
+        <span class="choice-name">Rock</span>
+        <kbd>R</kbd>
+      </button>
+      <button class="choice" type="button" data-choice="paper" aria-keyshortcuts="P">
+        <span class="choice-emoji" aria-hidden="true">✋</span>
+        <span class="choice-name">Paper</span>
+        <kbd>P</kbd>
+      </button>
+      <button class="choice" type="button" data-choice="scissors" aria-keyshortcuts="S">
+        <span class="choice-emoji" aria-hidden="true">✌️</span>
+        <span class="choice-name">Scissors</span>
+        <kbd>S</kbd>
+      </button>
+    </section>
+
+    <section class="arena" aria-live="polite">
+      <div class="pick">
+        <span class="pick-label">Player</span>
+        <span class="pick-value" id="playerDisplay">—</span>
+      </div>
+      <div class="result" id="resultDisplay">Make your move</div>
+      <div class="pick">
+        <span class="pick-label">Computer</span>
+        <span class="pick-value" id="computerDisplay">—</span>
+      </div>
+    </section>
+
+    <section class="history" aria-labelledby="historyTitle">
+      <div class="history-head">
+        <h2 id="historyTitle">Round history</h2>
+        <button class="reset" id="resetBtn" type="button">Reset game</button>
+      </div>
+      <ol class="history-list" id="historyList" reversed></ol>
+      <p class="history-empty" id="historyEmpty">No rounds played yet.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Built with HTML, CSS and JavaScript by <a href="https://github.com/codelady-ship">codelady-ship</a> · <a href="https://github.com/codelady-ship/rock-paper-scissors">Source</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
